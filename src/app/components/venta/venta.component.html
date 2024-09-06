@@ -1,0 +1,142 @@
+<!-- Botones-->
+<section id="actions" class="py-4 mb-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#addventa">
+                    <i class="fa fa-plus"></i>Adicionar
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Lista de ventas-->
+<section id="ventas">
+    <div clas="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-heard">
+                        <h4>ventas</h4>
+                    </div>
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <td>#</td>
+                                <td>Numero Celular</td>
+                                <td>Fecha</td>
+                                <td>Valor</td>
+                                <td>Operador</td>
+                                <td>Vendedor</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let venta of ventas; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{venta.celular}}</td>
+                                <td>{{venta.fecha}}</td>
+                                <td>{{venta.valor | number}}</td>
+                                <td>{{venta.operador.operador}}</td>
+                                <td>{{venta.vendedor.nombre}}</td>
+                                <td >
+                                    <!--<a routerLink="/venta" class="secondary-content"><i
+                                        (click)="getVenta(venta)" class="fa fa-pencil"
+                                        data-toggle="modal" data-target="#addventa"></i></a>
+                                    &nbsp;-->
+                                    <a routerLink="/venta" class="secondary-content"><i
+                                            (click)="delVenta(venta)" class="fa fa-trash"></i></a>
+                                    &nbsp;
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Modal para crear venta-->
+<div class="modal fade" id="addventa" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" *ngIf="!modoEdicion">
+                <h5 class="modal-title">Crear venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-header" *ngIf="modoEdicion">
+                <h5 class="modal-title">Modificar venta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="addForm">
+                <div class="modal-body">
+                    <div class = "row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="celular">Número celular</label>
+                                <input type="number" class="form-control" formControlName="celular"
+                                    [(ngModel)]="ventaObj.celular">
+                                <div class="alert alert-danger" role="alert"
+                                    *ngIf="addForm.get('celular')?.invalid && (addForm.get('celular')?.dirty || addForm.get('celular')?.touched)">
+                                    Este campo es requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="idOperador">Operador</label>
+                                <select class="custom-select custom-select-sm" formControlName="idOperador"
+                                    [(ngModel)]="ventaObj.idOperador">
+                                    <option [value]="operador.idOperador" *ngFor="let operador of operadores">{{ operador.operador }}</option>
+                                </select>
+                                <div class="alert alert-danger" role="alert"
+                                    *ngIf="addForm.get('idOperador')?.invalid && (addForm.get('idOperador')?.dirty || addForm.get('idOperador')?.touched)">
+                                    Este campo es requerido
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="valor">Valor</label>
+                                <input type="number" class="form-control" formControlName="valor"
+                                    [(ngModel)]="ventaObj.valor">
+                                <div class="alert alert-danger" role="alert"
+                                    *ngIf="addForm.get('valor')?.invalid && (addForm.get('valor')?.dirty || addForm.get('valor')?.touched)">
+                                    Este campo es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="idVendedor">Vendedor</label>
+                                <select class="custom-select custom-select-sm" formControlName="idVendedor"
+                                    [(ngModel)]="ventaObj.idVendedor">
+                                    <option [value]="vendedor.idVendedor" *ngFor="let vendedor of vendedores">{{ vendedor.nombre }}</option>
+                                </select>
+                                <div class="alert alert-danger" role="alert"
+                                    *ngIf="addForm.get('idVendedor')?.invalid && (addForm.get('idVendedor')?.dirty || addForm.get('idVendedor')?.touched)">
+                                    Este campo es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer" *ngIf="!modoEdicion">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="addVenta()" [disabled]="!addForm.valid"
+                    data-dismiss="modal">Guardar</button>
+            </div>
+            <div class="modal-footer" *ngIf="modoEdicion">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="updateVenta()" [disabled]="!addForm.valid"
+                    data-dismiss="modal">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

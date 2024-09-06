@@ -1,0 +1,95 @@
+<!-- Botones-->
+<section id="actions" class="py-4 mb-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#addOperador">
+                    <i class="fa fa-plus"></i>Adicionar
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Lista de Operadores-->
+<section id="operadores">
+    <div clas="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-heard">
+                        <h4>Operadores</h4>
+                    </div>
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <td>#</td>
+                                <td>Operador</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let operador of operadores; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{operador.operador}}</td>
+                                <td >
+                                    <a routerLink="/operador" class="secondary-content"><i
+                                        (click)="getOperador(operador)" class="fa fa-pencil"
+                                        data-toggle="modal" data-target="#addOperador"></i></a>
+                                    &nbsp;
+                                    <a routerLink="/operador" class="secondary-content"><i
+                                            (click)="delOperador(operador)" class="fa fa-trash"></i></a>
+                                    &nbsp;
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Modal para crear operador-->
+<div class="modal fade" id="addOperador" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" *ngIf="!modoEdicion">
+                <h5 class="modal-title">Crear operador</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-header" *ngIf="modoEdicion">
+                <h5 class="modal-title">Modificar operador</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form [formGroup]="addForm">
+                <div class="modal-body">
+                    <div class = "row">
+                        <div class="col-8">
+                            <div class="form-group">
+                                <label for="operador">Operador</label>
+                                <input type="text" class="form-control" formControlName="operador"
+                                    [(ngModel)]="operadorObj.operador">
+                                <div class="alert alert-danger" role="alert"
+                                    *ngIf="addForm.get('operador')?.invalid && (addForm.get('operador')?.dirty || addForm.get('operador')?.touched)">
+                                    Este campo es requerido
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer" *ngIf="!modoEdicion">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="addOperador()" [disabled]="!addForm.valid"
+                    data-dismiss="modal">Guardar</button>
+            </div>
+            <div class="modal-footer" *ngIf="modoEdicion">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" (click)="updateOperador()" [disabled]="!addForm.valid"
+                    data-dismiss="modal">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
